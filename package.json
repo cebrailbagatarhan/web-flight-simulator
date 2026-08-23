@@ -11,7 +11,7 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
+	"license": "SEE LICENSE IN LICENSE",
 	"type": "module",
 	"dependencies": {
 		"cesium": "^1.137.0",
