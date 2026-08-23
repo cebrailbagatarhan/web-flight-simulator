@@ -2,13 +2,39 @@
   <img src="public/assets/images/logo.webp" alt="Web Flight Simulator Logo" width="200"/>
 </p>
 
-# ✈️ Web Flight Simulator
+# ✈️ Web Flight Simulator — Adaptation
 
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML) [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS) [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Three.js](https://img.shields.io/badge/Three.js-black?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://threejs.org/) [![CesiumJS](https://img.shields.io/badge/CesiumJS-00AAEE?style=for-the-badge&logo=cesium)](https://cesium.com/) [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-A high-performance, web-based flight simulator that bridges the gap between **Three.js** high-fidelity 3D modeling and **CesiumJS** global-scale geospatial data. Experience the thrill of piloting an F-15 fighter jet across a real-time, 3D replica of the Earth.
+> [!IMPORTANT]
+> **Project origin:** This repository is an independently maintained adaptation of [Dimar Tarmizi's original Web Flight Simulator](https://github.com/dimartarmizi/web-flight-simulator). It is not the original upstream repository. The original simulator and its baseline architecture, code, UI, and bundled assets are credited to Dimar Tarmizi.
+
+A browser-based flight simulator built with **Three.js** and **CesiumJS**. This adaptation keeps the upstream simulator's core experience while adding a documented set of geospatial, landing, telemetry, input, and configuration changes.
 
 ![Simulator Screenshot](public/assets/images/screenshot.jpg)
+
+## 🔎 Attribution and Adaptation Scope
+
+| Area | Status |
+| :--- | :--- |
+| **Original project** | [dimartarmizi/web-flight-simulator](https://github.com/dimartarmizi/web-flight-simulator) |
+| **Original developer and copyright holder** | [Dimar Tarmizi](https://github.com/dimartarmizi) |
+| **Adaptation maintainer** | [@cebrailbagatarhan](https://github.com/cebrailbagatarhan) |
+| **This adaptation** | [cebrailbagatarhan/web-flight-simulator](https://github.com/cebrailbagatarhan/web-flight-simulator) |
+| **License** | Upstream custom non-commercial license; see [LICENSE](LICENSE) |
+
+### Changes in this adaptation
+
+The following differences were verified against the upstream `main` branch when this README was updated:
+
+- Moved Google Maps and Cesium ion configuration to Vite environment variables and added `.env.example`.
+- Added optional Google Photorealistic 3D Tiles, with OpenStreetMap/ArcGIS imagery and OSM Buildings fallbacks.
+- Added Turkey-focused spawn presets and an Antalya landing-success flow.
+- Added persistent best score, radar altitude, vertical-speed, and flight-mode telemetry.
+- Made throttle updates frame-rate independent and tightened direct weapon-selection handling.
+- Added terrain-height sampling and loading-failure fallbacks for the expanded 3D flow.
+
+These bullets describe this adaptation's changes; they are not a claim of authorship over the upstream simulator.
 
 ## 🚀 Key Features
 
@@ -78,9 +104,9 @@ The project utilizes a **Hybrid Rendering Architecture**:
 
 ## 📦 Installation & Setup
 
-1. **Clone the repository:**
+1. **Clone this adaptation:**
    ```bash
-   git clone https://github.com/dimartarmizi/web-flight-simulator.git
+   git clone https://github.com/cebrailbagatarhan/web-flight-simulator.git
    cd web-flight-simulator
    ```
 
@@ -89,27 +115,44 @@ The project utilizes a **Hybrid Rendering Architecture**:
    npm install
    ```
 
-3. **Run development server:**
+3. **Create a local environment file:**
+   ```bash
+   cp .env.example .env
+   ```
+
+   On Windows Command Prompt, use `copy .env.example .env`.
+
+4. **Add the API configuration needed by the services you use:**
+   ```dotenv
+   VITE_GOOGLE_MAPS_API_KEY=
+   VITE_CESIUM_ION_TOKEN=
+   ```
+
+   The app falls back to non-key imagery when these values are unavailable. Variables prefixed with `VITE_` are included in the browser bundle, so restrict API keys by HTTP referrer, enabled APIs, and quota; do not treat them as server-side secrets.
+
+5. **Run the development server:**
    ```bash
    npm run dev
    ```
 
-4. **Build for production:**
+6. **Build for production:**
    ```bash
    npm run build
    ```
 
 ## 📜 License
 
-This project is licensed under a **Dual-Licensing** model:
+The upstream project and this adaptation are distributed under the custom non-commercial terms in [LICENSE](LICENSE):
 
-- **Non-Commercial:** Free to use for personal, educational, and non-profit projects.
-- **Commercial:** Requires a separate commercial license for any for-profit use.
+- **Non-commercial use:** Permitted subject to the license terms.
+- **Commercial use:** Requires a separate license from the original copyright holder.
 
-Please refer to the [LICENSE](LICENSE) file for full legal terms or contact [dimartarmizi@email.com](mailto:dimartarmizi@email.com) for inquiries.
+For commercial licensing questions, contact the original copyright holder at [dimartarmizi@email.com](mailto:dimartarmizi@email.com).
 
 ## 🏷️ Credits
 
-- **Developer**: Dimar Tarmizi
-- **3D Model**: ["Low poly F-15"](https://sketchfab.com/3d-models/low-poly-f-15-0c1cfa22d7094556914fcdfba75bef5d) by [SIpriv](https://sketchfab.com/sipriv).
-- **Engine**: [Three.js](https://threejs.org/) & [CesiumJS](https://cesium.com/).
+- **Original developer and copyright holder:** [Dimar Tarmizi](https://github.com/dimartarmizi)
+- **Upstream repository:** [dimartarmizi/web-flight-simulator](https://github.com/dimartarmizi/web-flight-simulator)
+- **Adaptation maintainer:** [@cebrailbagatarhan](https://github.com/cebrailbagatarhan)
+- **3D model:** ["Low poly F-15"](https://sketchfab.com/3d-models/low-poly-f-15-0c1cfa22d7094556914fcdfba75bef5d) by [SIpriv](https://sketchfab.com/sipriv)
+- **Engines:** [Three.js](https://threejs.org/) and [CesiumJS](https://cesium.com/)
