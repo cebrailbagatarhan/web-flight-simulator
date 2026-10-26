@@ -1,0 +1,26 @@
+name: Flight planner tests
+on:
+  push:
+    paths:
+      - src/flightPlanner.js
+      - tests/flightPlanner.test.js
+      - index.html
+      - .github/workflows/flight-planner.yml
+  pull_request:
+    paths:
+      - src/flightPlanner.js
+      - tests/flightPlanner.test.js
+      - index.html
+      - .github/workflows/flight-planner.yml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: node --test tests/flightPlanner.test.js
+      - run: npm run build
