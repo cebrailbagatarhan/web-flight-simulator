@@ -21,6 +21,6 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - run: npm ci
       - run: node --test tests/flightPlanner.test.js
+      - run: npm ci
       - run: npm run build
