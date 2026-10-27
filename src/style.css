@@ -546,6 +546,7 @@ html {
 	display: flex;
 	flex-direction: column;
 	background: rgba(0, 20, 0, 0.4);
+	overflow-y: auto;
 }
 
 .pause-header {
@@ -614,6 +615,29 @@ html {
 
 .pause-btn.quit:hover .btn-desc {
 	color: rgba(255, 0, 0, 0.6);
+}
+
+
+.pause-copy-status {
+	margin: 0;
+	font-size: 11px;
+	line-height: 1.4;
+	color: #0f0;
+	overflow-wrap: anywhere;
+}
+
+.pause-copy-status:empty {
+	display: none;
+}
+
+.pause-copy-fallback {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 8px;
+	background: rgba(0, 20, 0, 0.9);
+	border: 1px solid #0f0;
+	color: #0f0;
+	font: inherit;
 }
 
 .pause-main {
