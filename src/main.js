@@ -13,6 +13,7 @@ import {
 import { PlanePhysics } from './plane/planePhysics';
 import { PlaneController } from './plane/planeController';
 import { movePosition } from './utils/math';
+import { formatPauseCoordinates, tryCopyPosition } from './utils/position';
 import { calculateDistance, reverseGeocode } from './world/regions';
 import { HUD } from './ui/hud';
 import { JetFlame } from './plane/jetFlame';
@@ -1233,6 +1234,31 @@ document.getElementById('startBtn').onclick = () => {
 };
 
 setupModalListeners();
+
+document.getElementById('copyPositionBtn').onclick = async () => {
+	const status = document.getElementById('copy-position-status');
+	const fallback = document.getElementById('copy-position-fallback');
+	fallback.classList.add('hidden');
+	status.textContent = '';
+
+	let coordinates;
+	try {
+		coordinates = formatPauseCoordinates(state.lat, state.lon);
+	} catch {
+		status.textContent = 'POSITION UNAVAILABLE';
+		return;
+	}
+
+	if (await tryCopyPosition(coordinates, navigator.clipboard)) {
+		status.textContent = 'COORDINATES COPIED';
+	} else {
+		fallback.value = coordinates;
+		fallback.classList.remove('hidden');
+		fallback.focus();
+		fallback.select();
+		status.textContent = 'CLIPBOARD BLOCKED — COPY SELECTED TEXT';
+	}
+};
 
 document.getElementById('resumeBtn').onclick = () => {
 	closeAllModals();
