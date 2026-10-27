@@ -1,0 +1,25 @@
+name: Pause position checks
+
+on:
+  push:
+    branches: [feat/pause-position-copy-20261027]
+  pull_request:
+    paths:
+      - 'src/utils/position.js'
+      - 'tests/position.test.js'
+      - 'src/main.js'
+      - 'index.html'
+      - 'src/style.css'
+      - '.github/workflows/pause-position-checks.yml'
+
+jobs:
+  position-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/position.test.js
+      - run: node --check src/main.js
+      - run: node --check src/utils/position.js
