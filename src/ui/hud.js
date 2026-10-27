@@ -1,5 +1,6 @@
 import { setMinimapCamera, getMiniViewer, getViewer, setPauseMinimapCamera, getPauseMiniViewer } from '../world/cesiumWorld';
 import { calculateDistance } from '../world/regions';
+import { formatAltitudeDual } from '../utils/aviationUnits';
 import * as Cesium from 'cesium';
 
 export class HUD {
@@ -393,8 +394,7 @@ export class HUD {
 			this.pauseLonElem.innerText = `${Math.abs(state.lon).toFixed(4)} deg ${lonDir}`;
 		}
 		if (this.pauseAltElem) {
-			const altFeet = Math.max(0, Math.round(state.alt * 3.28084));
-			this.pauseAltElem.innerText = `${altFeet.toLocaleString()} FT`;
+			this.pauseAltElem.innerText = formatAltitudeDual(state.alt);
 		}
 
 		if (this.pauseTimeElem) {
