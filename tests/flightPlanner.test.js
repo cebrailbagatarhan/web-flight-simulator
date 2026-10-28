@@ -22,3 +22,19 @@ test('invalid coordinates and speed are rejected', () => {
     assert.throws(() => calculateRoute(...values), RangeError);
   }
 });
+
+test('tailwind shortens time and headwind lengthens time without changing distance', () => {
+  const calm = calculateRoute(0, 0, 1, 0, 120);
+  const tailwind = calculateRoute(0, 0, 1, 0, 120, 30);
+  const headwind = calculateRoute(0, 0, 1, 0, 120, -30);
+  assert.equal(tailwind.distanceNm, calm.distanceNm);
+  assert.equal(headwind.distanceNm, calm.distanceNm);
+  assert.ok(Math.abs(tailwind.durationMinutes - calm.durationMinutes * 120 / 150) < 1e-10);
+  assert.ok(Math.abs(headwind.durationMinutes - calm.durationMinutes * 120 / 90) < 1e-10);
+});
+
+test('nonpositive or nonfinite ground speed is rejected', () => {
+  for (const wind of [-120, -121, NaN, Infinity, -Infinity]) {
+    assert.throws(() => calculateRoute(0, 0, 1, 0, 120, wind), RangeError);
+  }
+});
