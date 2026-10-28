@@ -86,13 +86,14 @@
 			<button class="close-modal" type="button">CLOSE</button>
 		</div>
 		<div class="modal-body">
-			<p>Plan a direct great-circle route. Estimated time assumes no wind.</p>
+			<p>Plan a direct great-circle route. Optional constant along-route wind (+ tailwind, − headwind) adjusts the estimated time; this is not a weather forecast.</p>
 			<form id="flightPlannerForm">
 				<label>Departure latitude <input name="fromLat" type="number" step="any" min="-90" max="90" value="41.0082" required></label>
 				<label>Departure longitude <input name="fromLon" type="number" step="any" min="-180" max="180" value="28.9784" required></label>
 				<label>Arrival latitude <input name="toLat" type="number" step="any" min="-90" max="90" value="38.4237" required></label>
 				<label>Arrival longitude <input name="toLon" type="number" step="any" min="-180" max="180" value="27.1384" required></label>
 				<label>Cruise speed (knots) <input name="speedKnots" type="number" step="any" min="0.1" value="250" required></label>
+				<label>Along-route wind (knots; + tailwind / − headwind) <input name="windKnots" type="number" step="any" value="0" required></label>
 				<button type="submit">CALCULATE ROUTE</button>
 			</form>
 			<p id="flightPlannerResult" role="status" aria-live="polite"></p>
