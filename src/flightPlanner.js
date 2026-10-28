@@ -16,6 +16,25 @@ export function calculateRoute(fromLat, fromLon, toLat, toLon, speedKnots) {
   return { distanceNm, durationMinutes: distanceNm / speedKnots * 60 };
 }
 
+/** Initial great-circle course in degrees clockwise from true north, or null if undefined. */
+export function calculateInitialBearing(fromLat, fromLon, toLat, toLon) {
+  const values = [fromLat, fromLon, toLat, toLon];
+  if (!values.every(Number.isFinite) || Math.abs(fromLat) > 90 || Math.abs(toLat) > 90 ||
+      Math.abs(fromLon) > 180 || Math.abs(toLon) > 180) {
+    throw new RangeError('Enter valid coordinates.');
+  }
+  const radians = degrees => degrees * Math.PI / 180;
+  const start = radians(fromLat);
+  const end = radians(toLat);
+  const deltaLon = radians(toLon - fromLon);
+  const east = Math.sin(deltaLon) * Math.cos(end);
+  const north = Math.cos(start) * Math.sin(end) -
+    Math.sin(start) * Math.cos(end) * Math.cos(deltaLon);
+  // Coincident and antipodal points do not have a unique initial course.
+  if (Math.hypot(east, north) < 1e-12) return null;
+  return (Math.atan2(east, north) * 180 / Math.PI + 360) % 360;
+}
+
 export function setupFlightPlanner(doc = document) {
   const openButton = doc.getElementById('flightPlannerBtn');
   const modal = doc.getElementById('flightPlannerModal');
@@ -29,12 +48,16 @@ export function setupFlightPlanner(doc = document) {
     event.preventDefault();
     const data = new FormData(form);
     try {
+      const fromLat = Number(data.get('fromLat'));
+      const fromLon = Number(data.get('fromLon'));
+      const toLat = Number(data.get('toLat'));
+      const toLon = Number(data.get('toLon'));
       const { distanceNm, durationMinutes } = calculateRoute(
-        Number(data.get('fromLat')), Number(data.get('fromLon')),
-        Number(data.get('toLat')), Number(data.get('toLon')),
-        Number(data.get('speedKnots'))
+        fromLat, fromLon, toLat, toLon, Number(data.get('speedKnots'))
       );
-      output.textContent = `Great-circle distance: ${distanceNm.toFixed(1)} NM · Estimated time: ${Math.round(durationMinutes)} min (no wind)`;
+      const bearing = calculateInitialBearing(fromLat, fromLon, toLat, toLon);
+      const bearingText = bearing === null ? 'N/A' : `${bearing.toFixed(0)}° true`;
+      output.textContent = `Great-circle distance: ${distanceNm.toFixed(1)} NM · Estimated time: ${Math.round(durationMinutes)} min (no wind) · Initial bearing: ${bearingText}`;
     } catch (error) {
       output.textContent = error.message;
     }
