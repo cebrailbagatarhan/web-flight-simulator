@@ -13,7 +13,7 @@ import {
 import { PlanePhysics } from './plane/planePhysics';
 import { PlaneController } from './plane/planeController';
 import { movePosition } from './utils/math';
-import { formatPauseCoordinates, tryCopyPosition } from './utils/position';
+import { formatPauseCoordinates, formatOpenStreetMapLink, tryCopyPosition } from './utils/position';
 import { calculateDistance, reverseGeocode } from './world/regions';
 import { HUD } from './ui/hud';
 import { JetFlame } from './plane/jetFlame';
@@ -1253,6 +1253,31 @@ document.getElementById('copyPositionBtn').onclick = async () => {
 		status.textContent = 'COORDINATES COPIED';
 	} else {
 		fallback.value = coordinates;
+		fallback.classList.remove('hidden');
+		fallback.focus();
+		fallback.select();
+		status.textContent = 'CLIPBOARD BLOCKED — COPY SELECTED TEXT';
+	}
+};
+
+document.getElementById('copyMapLinkBtn').onclick = async () => {
+	const status = document.getElementById('copy-position-status');
+	const fallback = document.getElementById('copy-position-fallback');
+	fallback.classList.add('hidden');
+	status.textContent = '';
+
+	let link;
+	try {
+		link = formatOpenStreetMapLink(state.lat, state.lon);
+	} catch {
+		status.textContent = 'POSITION UNAVAILABLE';
+		return;
+	}
+
+	if (await tryCopyPosition(link, navigator.clipboard)) {
+		status.textContent = 'MAP LINK COPIED';
+	} else {
+		fallback.value = link;
 		fallback.classList.remove('hidden');
 		fallback.focus();
 		fallback.select();
