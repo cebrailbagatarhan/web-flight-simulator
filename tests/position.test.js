@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { formatPauseCoordinates, tryCopyPosition } from '../src/utils/position.js';
+import { formatPauseCoordinates, formatOpenStreetMapLink, tryCopyPosition } from '../src/utils/position.js';
 
 test('formats geographic coordinates in latitude-longitude order', () => {
   assert.equal(formatPauseCoordinates(41.0082, 28.9784), '41.00820, 28.97840');
@@ -34,4 +34,24 @@ test('copies the formatted position when clipboard is allowed', async () => {
 test('reports unavailable or rejected clipboard access without throwing', async () => {
   assert.equal(await tryCopyPosition('x', undefined), false);
   assert.equal(await tryCopyPosition('x', { writeText: async () => { throw new Error('denied'); } }), false);
+});
+
+test('generates a copyable OpenStreetMap link without network access', () => {
+  assert.equal(
+    formatOpenStreetMapLink(41.0082, 28.9784),
+    'https://www.openstreetmap.org/?mlat=41.00820&mlon=28.97840#map=12/41.00820/28.97840'
+  );
+});
+
+test('OpenStreetMap link supports negative coordinates and normalizes negative zero', () => {
+  assert.equal(
+    formatOpenStreetMapLink(-0, -70.669265),
+    'https://www.openstreetmap.org/?mlat=0.00000&mlon=-70.66926#map=12/0.00000/-70.66926'
+  );
+});
+
+test('OpenStreetMap link rejects invalid coordinates', () => {
+  for (const coords of [[NaN, 0], [0, Infinity], [91, 0], [0, -181]]) {
+    assert.throws(() => formatOpenStreetMapLink(...coords), RangeError);
+  }
 });
